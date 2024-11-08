@@ -54,7 +54,8 @@ func (g *Golatt) mergeData(d *TemplateData) {
 	}
 }
 
-func (g *Golatt) RenderTemplate(w http.ResponseWriter, name string, data *TemplateData) {
+// Render the template available at templates/page/name.gohtml with the data provided
+func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) {
 	g.mergeData(data)
 	t := g.setupTemplates()
 	template.Must(t.ParseFS(g.Files, getFile(name)))
@@ -77,23 +78,33 @@ func getAssetsPath(path string) string {
 	return "/assets/" + path
 }
 
+// GetStaticPath returns the path of a static file (image, font)
 func (d *TemplateData) GetStaticPath(path string) string {
 	return getStaticPath(path)
 }
 
+// GetAssetsPath returns the path of an assets (js, css)
 func (d *TemplateData) GetAssetsPath(path string) string {
 	return getAssetsPath(path)
 }
 
+// Template represents a generic template
 type Template struct {
-	Golatt      *Golatt
-	Name        string
-	Title       string
-	Data        interface{}
-	Image       string
+	// Golatt used
+	Golatt *Golatt
+	// Name of the template (check Golatt.Render)
+	Name string
+	// Title of the template
+	Title string
+	// Data to pass
+	Data interface{}
+	// Image to use in the SEO
+	Image string
+	// Description to use in the SEO
 	Description string
 }
 
+// Handle a http request
 func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		seo := &SeoData{
@@ -103,7 +114,7 @@ func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 		if t.Image != "" {
 			seo.Image = getStaticPath(t.Image)
 		}
-		t.Golatt.RenderTemplate(w, t.Name, &TemplateData{
+		t.Golatt.Render(w, t.Name, &TemplateData{
 			Title: t.Title,
 			SEO:   seo,
 			Data:  t.Data,
@@ -111,6 +122,7 @@ func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// HandleSimpleTemplate handles a http request for a simple Template (only name and title are present)
 func (g *Golatt) HandleSimpleTemplate(name string, title string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		t := Template{
