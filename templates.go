@@ -102,14 +102,19 @@ type Template struct {
 	Image string
 	// Description to use in the SEO
 	Description string
+	// URL of the template
+	URL string
 }
 
 // Handle a http request
 func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		seo := &SeoData{
-			URL:         "/" + t.Name,
+			URL:         t.URL,
 			Description: t.Description,
+		}
+		if seo.URL == "" {
+			seo.URL = "/" + t.Name
 		}
 		if t.Image != "" {
 			seo.Image = getStaticPath(t.Image)
