@@ -17,7 +17,7 @@ type Golatt struct {
 	*mux.Router
 	// Files containing templates used
 	Files fs.FS
-	// Templates to parse on request
+	// Templates to parse during a request
 	Templates []string
 	// DefaultSeoData contains all default seo data used by opengraph and twitter
 	DefaultSeoData *SeoData

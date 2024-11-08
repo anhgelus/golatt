@@ -56,3 +56,12 @@ func main() {
 	g.StartServer(":8000")
 }
 ```
+### Templates
+- SEO Data, templates to parse, initial section
+- static and assets paths
+- HandleSimpleTemplate
+- Template
+- Render
+### Configuration
+- change static and assets directories
+- format title
