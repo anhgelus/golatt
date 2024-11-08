@@ -67,7 +67,7 @@ func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) 
 }
 
 func (g *Golatt) getFile(path string) string {
-	return g.DefaultDirectoryFS + "/" + g.PageDirectory + "/" + path + ".gohtml"
+	return g.FsDirectory + "/" + g.PageDirectory + "/" + path + "." + g.TemplateExtension
 }
 
 func getStaticPath(path string) string {

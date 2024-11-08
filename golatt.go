@@ -44,8 +44,12 @@ type Golatt struct {
 	PageDirectory string
 	// DefaultDirectoryFS is the folder containing all templates
 	//
-	// Default : "templates"
-	DefaultDirectoryFS string
+	// Default: "templates"
+	FsDirectory string
+	// TemplateExtension is the extension of all templates
+	//
+	// Default: "gohtml"
+	TemplateExtension string
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
@@ -56,12 +60,13 @@ func New(files fs.FS) *Golatt {
 		FormatTitle: func(t string) string {
 			return t
 		},
-		Templates:          make([]string, 0),
-		InitialSection:     "base",
-		AssetsDirectory:    "dist",
-		StaticDirectory:    "public",
-		PageDirectory:      "page",
-		DefaultDirectoryFS: "templates",
+		Templates:         make([]string, 0),
+		InitialSection:    "base",
+		AssetsDirectory:   "dist",
+		StaticDirectory:   "public",
+		PageDirectory:     "page",
+		FsDirectory:       "templates",
+		TemplateExtension: "gohtml",
 	}
 }
 
