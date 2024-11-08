@@ -30,6 +30,14 @@ type Golatt struct {
 	//
 	// Default: returns the title without modification
 	FormatTitle func(t string) string
+	// AssetsDirectory is the folder containing assets
+	//
+	// Default: "dist"
+	AssetsDirectory string
+	// StaticDirectory is the folder containing static files
+	//
+	// Default: "public"
+	StaticDirectory string
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
@@ -42,13 +50,15 @@ func New(files fs.FS) *Golatt {
 		},
 		Templates:      make([]string, 0),
 		InitialSection: "base",
+		AssetsDirectory: "dist",
+		StaticDirectory: "public",
 	}
 }
 
 // StartServer starts the http server listening on addr (e.g. ":8000", "127.0.0.1:80")
 func (g *Golatt) StartServer(addr string) {
-	g.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./public"))))
-	g.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./dist"))))
+	g.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./"+g.StaticDirectory))))
+	g.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./"+g.AssetsDirectory))))
 
 	srv := &http.Server{
 		Handler:      g,
