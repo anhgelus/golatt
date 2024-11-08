@@ -13,15 +13,35 @@ import (
 
 // Golatt is a http server empowered by mux.Router
 type Golatt struct {
-	Templates fs.FS
+	// Router used
 	*mux.Router
+	// Files containing templates used
+	Files fs.FS
+	// Templates to parse on request
+	Templates []string
+	// DefaultSeoData contains all default seo data used by opengraph and twitter
+	DefaultSeoData *SeoData
+	// InitialSection is the initial section called to render templates.
+	// It must be the section containing basic HTML5 structure
+	//
+	// Default: "base"
+	InitialSection string
+	// FormatTitle format titles to be more consistant.
+	//
+	// Default: returns the title without modification
+	FormatTitle func(t string) string
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
 func New(files fs.FS) *Golatt {
 	return &Golatt{
-		Templates: files,
-		Router:    mux.NewRouter(),
+		Files:  files,
+		Router: mux.NewRouter(),
+		FormatTitle: func(t string) string {
+			return t
+		},
+		Templates:      make([]string, 0),
+		InitialSection: "base",
 	}
 }
 

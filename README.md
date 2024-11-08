@@ -1,6 +1,6 @@
 # Golatt
 
-Golatt is a new Go framework helping the creation of website!
+Golatt is a new Go framework helping the creation of websites!
 
 It is lightweight and heavily customizable.
 
