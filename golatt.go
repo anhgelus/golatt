@@ -38,6 +38,10 @@ type Golatt struct {
 	//
 	// Default: "public"
 	StaticDirectory string
+	// PageDirectory is the folder containing page templates
+	//
+	// Default: "page"
+	PageDirectory string
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)

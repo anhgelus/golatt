@@ -58,7 +58,7 @@ func (g *Golatt) mergeData(d *TemplateData) {
 func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) {
 	g.mergeData(data)
 	t := g.setupTemplates()
-	template.Must(t.ParseFS(g.Files, getFile(name)))
+	template.Must(t.ParseFS(g.Files, g.getFile(name)))
 	err := t.ExecuteTemplate(w, g.InitialSection, data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -66,8 +66,8 @@ func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) 
 	}
 }
 
-func getFile(path string) string {
-	return "templates/page/" + path + ".gohtml"
+func (g* Golatt) getFile(path string) string {
+	return "templates/"+ g.PageDirectory "/" + path + ".gohtml"
 }
 
 func getStaticPath(path string) string {
