@@ -84,3 +84,43 @@ func (d *TemplateData) GetStaticPath(path string) string {
 func (d *TemplateData) GetAssetsPath(path string) string {
 	return getAssetsPath(path)
 }
+
+type Template struct {
+	Golatt      *Golatt
+	Name        string
+	Title       string
+	Data        interface{}
+	Image       string
+	Description string
+}
+
+func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		seo := &SeoData{
+			URL:         "/" + t.Name,
+			Description: t.Description,
+		}
+		if t.Image != "" {
+			seo.Image = getStaticPath(t.Image)
+		}
+		t.Golatt.RenderTemplate(w, t.Name, &TemplateData{
+			Title: t.Title,
+			SEO:   seo,
+			Data:  t.Data,
+		})
+	}
+}
+
+func (g *Golatt) HandleSimpleTemplate(name string, title string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		t := Template{
+			Golatt:      g,
+			Name:        name,
+			Title:       title,
+			Data:        nil,
+			Image:       "",
+			Description: "",
+		}
+		t.Handle()
+	}
+}
