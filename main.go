@@ -1,0 +1,5 @@
+package golatt
+
+func Setup() {
+
+}
