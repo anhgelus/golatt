@@ -186,7 +186,7 @@ If you need more customization, you can use `Golatt.Render(w http.ResponseWriter
 
 For example:
 ```
-g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &TemplateData{
+g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &golatt.TemplateData{
 	Title: t.Title,
 	SEO:   &golatt.SeoData{
         URL: "/foo",
