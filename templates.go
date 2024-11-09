@@ -31,11 +31,7 @@ type TemplateData struct {
 }
 
 func (g *Golatt) setupTemplates() *template.Template {
-	var t *template.Template
-	for _, p := range g.Templates {
-		t = template.Must(template.ParseFS(g.Files, p))
-	}
-	return t
+	return template.Must(template.ParseFS(g.Files, g.Templates...))
 }
 
 func (g *Golatt) mergeData(d *TemplateData) {
@@ -83,7 +79,7 @@ func (d *TemplateData) GetStaticPath(path string) string {
 	return GetStaticPath(path)
 }
 
-// GetAssetsPath returns the path of an asset (js, css)
+// GetAssetPath returns the path of an asset (js, css)
 func (d *TemplateData) GetAssetPath(path string) string {
 	return GetAssetPath(path)
 }
