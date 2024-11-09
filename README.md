@@ -100,10 +100,10 @@ It can be components, html templates or what else needed to be loaded at each re
 
 Let's create a html template. 
 In the new file `templates/base/base.gohtml`, you can fill it with your html template, e.g.
-```gohtml
+```html
 {{define "base"}}
     <!DOCTYPE html>
-    <html lang="fr" prefix="og: https://ogp.me/ns#">
+    <html lang="en" prefix="og: https://ogp.me/ns#">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
