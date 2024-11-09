@@ -194,13 +194,13 @@ If you need more customization, you can use `Golatt.Render(w http.ResponseWriter
 For example:
 ```go
 g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &golatt.TemplateData{
-	Title: t.Title,
+	Title: "Foo",
 	SEO:   &golatt.SeoData{
-        URL: "/foo",
-        Description: "Foo page!",
-        Image: "foo.jpg",
+		URL: "/foo",
+		Description: "Foo page!",
+		Image: "foo.jpg",
     },
-	Data:  t.Data,
+	Data:  nil,
 }))
 ```
 ### Configuration
