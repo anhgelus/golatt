@@ -1,4 +1,4 @@
-module golatt
+module github.com/anhgelus/golatt
 
 go 1.23.2
 
