@@ -84,7 +84,8 @@ Golatt supports out-of-the-box opengraph.
 To use it, you have to set some global SEO information after creating your Golatt instance.
 To do it, just create a new `golatt.SeoData` instance.
 You can now fill in all required information, i.e. domain, image and description.
-Image must be a relative path inside your `public` directory (e.g., if your image is `public/foo/bar.webp`, the path must be `foo/bar.webp`).
+Image must be a relative path inside your `public` directory (e.g., if your image is `public/foo/bar.webp`, the path
+must be `foo/bar.webp`).
 ```go
 seo := golatt.SeoData{
     Domain: "example.org", // as required by opengraph specification
@@ -197,8 +198,55 @@ g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &golatt.TemplateData{
 }))
 ```
 ### Configuration
-- change static and assets directories
-- format title
-- change page directory
-- change default directory in FS
-- change gohtml extension
+You can change default static and assets directories by modifying `AssetsDirectory` and `StaticDirectory` of your `Golatt`
+instance.
+```go
+g.AssetsDirectory = "assets" // default: "dist"
+g.StaticDirectory = "static" // default: "public"
+```
+
+You can also format each page's title by setting `Golatt.FormatTitle`.
+It takes a string representing the page's title, and it returns the new title.
+```go
+g.FormatTitle = func(t string) string {
+	return t + " - Example Website"
+} // default: no modification of the title
+```
+
+It is also possible to edit the directory containing all your pages' template by modifying `Golatt.PageDirectory`.
+```go
+// new location is directory/foo/bar (where directory is the default directory in FS, i.e. templates by default)
+g.PageDirectory = "foo/bar" // default: "page"
+```
+
+You can change the default directory of the filesystem by modifying `Golatt.FsDirectory`.
+This value must be the same as the path of the embed directories.
+```go
+package main
+
+import (
+	"embed"
+
+	"github.com/anhgelus/golatt"
+)
+
+//go:embed foo/bar
+var templates embed.FS
+
+func main() {
+	g := golatt.New(templates)
+	// sets the default directory to the path of the go:embed FS
+	g.FsDirectory = "foo/bar" // default: "templates"
+}
+```
+
+You can also use another extension for the templates file. 
+Modify `Golatt.TemplateExtension` to change it.
+```go
+// all your template files must have this extension
+g.TemplateExtension = "html" // default: "gohtml"
+```
+## Technologies
+
+- Go 1.23
+- [gorilla/mux](https://github.com/gorilla/mux)
