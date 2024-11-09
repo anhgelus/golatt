@@ -142,11 +142,13 @@ Golatt splits files in two categories:
 
 Static files are not compiled files by you like images, fonts or whatever.
 These are usually placed in the folder `public` and are available with the prefix `/static/`.
-You can generate the URL of the file `public/foo/bar.jpg` with `.GetStaticPath foo/bar.jpg` inside your templates.
+You can generate the URL of the file `public/foo/bar.jpg` with `getStaticPath foo/bar.jpg` inside your templates.
 
 Assets files are compiled files by you like css (from scss, less), javascript or whatever.
 These are usually placed in the folder `dist` and are available with the prefix `/assets/`.
-You can generate the URL of the file `assets/foo/bar.js` with `.GetAssetPath foo/bar.jpg` inside your templates.
+You can generate the URL of the file `assets/foo/bar.js` with `getAssetPath foo/bar.jpg` inside your templates.
+
+If you want to get a path inside your program, you can use `golatt.GetStaticPath` and `golatt.GetAssetPath`.
 #### Simple template
 You can handle simple template very easily with `Golatt.HandleSimpleTemplate(name string, title string)`.
 - `name` is the name the template desired containing the body section, e.g. `foo/bar` for `templates/page/foo/bar.gohtml`.
