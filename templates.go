@@ -31,14 +31,25 @@ type TemplateData struct {
 }
 
 func (g *Golatt) setupTemplates() *template.Template {
-	return template.Must(template.ParseFS(g.Files, g.Templates...)).Funcs(template.FuncMap{
+	var t *template.Template
+	if g.Templates == nil || len(g.Templates) == 0 {
+		panic("templates are not initialized")
+	}
+	for _, p := range g.Templates {
+		if t == nil {
+			t = template.New(p)
+		} else {
+			t = t.New(p)
+		}
+	}
+	return template.Must(t.Funcs(template.FuncMap{
 		"getStaticPath": func(path string) string {
 			return GetStaticPath(path)
 		},
 		"getAssetPath": func(path string) string {
 			return GetAssetPath(path)
 		},
-	})
+	}).ParseFS(g.Files, g.Templates...))
 }
 
 func (g *Golatt) mergeData(d *TemplateData) {
