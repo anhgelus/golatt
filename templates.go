@@ -70,22 +70,22 @@ func (g *Golatt) getFile(path string) string {
 	return g.FsDirectory + "/" + g.PageDirectory + "/" + path + "." + g.TemplateExtension
 }
 
-func getStaticPath(path string) string {
+func GetStaticPath(path string) string {
 	return "/static/" + path
 }
 
-func getAssetsPath(path string) string {
+func GetAssetPath(path string) string {
 	return "/assets/" + path
 }
 
 // GetStaticPath returns the path of a static file (image, font)
 func (d *TemplateData) GetStaticPath(path string) string {
-	return getStaticPath(path)
+	return GetStaticPath(path)
 }
 
-// GetAssetsPath returns the path of an assets (js, css)
-func (d *TemplateData) GetAssetsPath(path string) string {
-	return getAssetsPath(path)
+// GetAssetsPath returns the path of an asset (js, css)
+func (d *TemplateData) GetAssetPath(path string) string {
+	return GetAssetPath(path)
 }
 
 // Template represents a generic template
@@ -117,7 +117,7 @@ func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 			seo.URL = "/" + t.Name
 		}
 		if t.Image != "" {
-			seo.Image = getStaticPath(t.Image)
+			seo.Image = GetStaticPath(t.Image)
 		}
 		t.Golatt.Render(w, t.Name, &TemplateData{
 			Title: t.Title,
