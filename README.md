@@ -9,7 +9,7 @@ It is lightweight and heavily customizable.
 ### Basic usage
 Install the framework with
 ```bash
-go get -u github.com/anhgelus/golatt
+go get -u github.com/anhgelus/golatt@v0.1.0
 ```
 
 Create a new directory called `templates` and embed it with go:embed, e.g.
@@ -132,7 +132,7 @@ Finally, we have to register these templates in Golatt.
 You must simply add the relative path of each template into the slice `Golatt.Templates`.
 You must NOT register your page body (the template defining the section `body`).
 ```go
-g.Templates = append(g.Templates, "templates/base/base.gohtml")
+g.Templates = append(g.Templates, "templates/base/*.gohtml")
 ```
 If you changed the name of the folder, you have to change the relative path too!
 #### Static paths and assets paths 
@@ -196,7 +196,7 @@ If you need more customization, you can use `Golatt.Render(w http.ResponseWriter
 
 For example:
 ```go
-g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &golatt.TemplateData{
+g.HandleFunc("/foo", g.Render(w, "foo/index", &golatt.TemplateData{
 	Title: "Foo",
 	SEO:   &golatt.SeoData{
 		URL: "/foo",
