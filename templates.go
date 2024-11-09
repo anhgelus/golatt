@@ -31,7 +31,14 @@ type TemplateData struct {
 }
 
 func (g *Golatt) setupTemplates() *template.Template {
-	return template.Must(template.ParseFS(g.Files, g.Templates...))
+	return template.Must(template.ParseFS(g.Files, g.Templates...)).Funcs(template.FuncMap{
+		"getStaticPath": func(path string) string {
+			return GetStaticPath(path)
+		},
+		"getAssetPath": func(path string) string {
+			return GetAssetPath(path)
+		},
+	})
 }
 
 func (g *Golatt) mergeData(d *TemplateData) {
@@ -66,22 +73,14 @@ func (g *Golatt) getFile(path string) string {
 	return g.FsDirectory + "/" + g.PageDirectory + "/" + path + "." + g.TemplateExtension
 }
 
+// GetStaticPath returns the path of a static file (image, font)
 func GetStaticPath(path string) string {
 	return "/static/" + path
 }
 
+// GetAssetPath returns the path of an asset (js, css)
 func GetAssetPath(path string) string {
 	return "/assets/" + path
-}
-
-// GetStaticPath returns the path of a static file (image, font)
-func (d *TemplateData) GetStaticPath(path string) string {
-	return GetStaticPath(path)
-}
-
-// GetAssetPath returns the path of an asset (js, css)
-func (d *TemplateData) GetAssetPath(path string) string {
-	return GetAssetPath(path)
 }
 
 // Template represents a generic template
