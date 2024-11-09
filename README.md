@@ -61,7 +61,8 @@ func main() {
 Golatt is designed to add Go templates in gorilla/mux.
 
 To use it, you must name the folder containing all your templates `templates` and place it at the root of your project.
-You can modify this name with a config, take a look at the next section to learn how to do it.
+You also have to create the directory `templates/page`.
+You can modify these names with a config, take a look at the next section to learn how to do it.
 
 Then, you have to create two folders:
 - `public` which is the folder containing static files (image, font...)
@@ -70,9 +71,14 @@ These names can also be modified with a config.
 
 Your project directory must look like this:
 ```
-dist/
-templates/
-public/
+📁 dist/
+    | ...
+📁 templates/
+    | 📁 page/
+        | ...
+    | ...
+📁 public/
+    | ...
 .gitignore
 main.go
 go.mod
