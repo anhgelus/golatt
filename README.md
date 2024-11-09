@@ -83,7 +83,7 @@ go.sum
 Golatt supports out-of-the-box opengraph.
 To use it, you have to set some global SEO information after creating your Golatt instance.
 To do it, just create a new `golatt.SeoData` instance.
-You can now fill in all required informations, i.e. domain, image and description.
+You can now fill in all required information, i.e. domain, image and description.
 Image must be a relative path inside your `public` directory (e.g., if your image is `public/foo/bar.webp`, the path must be `foo/bar.webp`).
 ```go
 seo := golatt.SeoData{
@@ -97,7 +97,7 @@ Then, you have to create your own templates.
 These templates will be parsed at every request.
 It can be components, html templates or what else needed to be loaded at each request.
 
-Let's create an html template. 
+Let's create a html template. 
 In the new file `templates/base/base.gohtml`, you can fill it with your html template, e.g.
 ```gohtml
 {{define "base"}}
@@ -121,7 +121,7 @@ In this example, this initial section is `base`: our templates will be loaded wi
 You can change this by setting `Golatt.InitialSection` to any other value.
 
 Finally, we have to register these templates in Golatt.
-You must simply add the relative path of each templates into the slice `Golatt.Templates`.
+You must simply add the relative path of each template into the slice `Golatt.Templates`.
 You must NOT register your page body (the template defining the section `body`).
 ```go
 g.Templates = append(g.Templates, "templates/base/base.gohtml")
@@ -133,7 +133,7 @@ Golatt splits files in two categories:
 - `assets`
 
 Static files are not compiled files by you like images, fonts or whatever.
-These are usally placed in the folder `public` and are available with the prefix `/static/`.
+These are usually placed in the folder `public` and are available with the prefix `/static/`.
 You can generate the URL of the file `public/foo/bar.jpg` with `.GetStaticPath foo/bar.jpg` inside your templates.
 
 Assets files are compiled files by you like css (from scss, less), javascript or whatever.
@@ -165,7 +165,7 @@ This is accessible via `.Data` inside the template.
 - `URL` is the URL of the page.
 If not set, it will be generated automatically like in simple template.
 
-After, you can call `Template.Handle()` to handle a HTTP request.
+After, you can call `Template.Handle()` to handle an HTTP request.
 
 ```go
 t := golatt.Template{
@@ -185,7 +185,7 @@ If you need more customization, you can use `Golatt.Render(w http.ResponseWriter
 - `data` are the data to pass to the template, but these are more complicated than the data given in `golatt.Template`.
 
 For example:
-```
+```go
 g.HandleFunc("/foo", t.Golatt.Render(w, "foo/index", &golatt.TemplateData{
 	Title: t.Title,
 	SEO:   &golatt.SeoData{
