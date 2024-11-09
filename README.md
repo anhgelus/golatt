@@ -92,8 +92,9 @@ To do it, just create a new `golatt.SeoData` instance.
 You can now fill in all required information, i.e. domain, image and description.
 Image must be a relative path inside your `public` directory (e.g., if your image is `public/foo/bar.webp`, the path
 must be `foo/bar.webp`).
+You must put this inside `Golatt.DefaultSeoData`.
 ```go
-seo := golatt.SeoData{
+g.DefaultSeoData = &golatt.SeoData{
     Domain: "example.org", // as required by opengraph specification
     Image: "foo/bar.webp",
     Description: "An amazing example website!",
