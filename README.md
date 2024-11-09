@@ -79,10 +79,10 @@ Your project directory must look like this:
     | ...
 📁 public/
     | ...
-.gitignore
-main.go
-go.mod
-go.sum
+🗎 .gitignore
+🗎 main.go
+🗎 go.mod
+🗎 go.sum
 ```
 
 #### Setting up general information
