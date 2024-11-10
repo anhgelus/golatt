@@ -175,6 +175,8 @@ This is accessible via `.Data` inside the template.
 - `URL` is the URL of the page.
 If not set, it will be generated automatically like in simple template.
 
+You can also call `Golatt.NewTemplate` to create a new template.
+
 After, you can call `Template.Handle()` to handle an HTTP request.
 
 ```go
@@ -186,6 +188,9 @@ t := golatt.Template{
     Description: "Home of my website!",
     URL: "/",
 }
+// or
+g.NewTemplate("index", "/", "Home", "index.webp", "Home of my website!", nil)
+
 t.Handle()
 ```
 #### Custom render
