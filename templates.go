@@ -112,6 +112,20 @@ type Template struct {
 	URL string
 }
 
+// NewTemplate creates a new template.
+// You can directly handle it with Template.Handle
+func (g *Golatt) NewTemplate(name string, url string, title string, image string, description string, data interface{}) *Template {
+	return &Template{
+		Golatt:      g,
+		Name:        name,
+		Title:       title,
+		Data:        data,
+		Image:       image,
+		Description: description,
+		URL:         url,
+	}
+}
+
 // Handle a http request
 func (t *Template) Handle() {
 	url := t.URL
