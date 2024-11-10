@@ -50,6 +50,8 @@ type Golatt struct {
 	//
 	// Default: "gohtml"
 	TemplateExtension string
+	// NotFoundHandler handles 404 errors
+	NotFoundHandler func(http.ResponseWriter, *http.Request)
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
@@ -74,6 +76,8 @@ func New(files fs.FS) *Golatt {
 func (g *Golatt) StartServer(addr string) {
 	g.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./"+g.StaticDirectory))))
 	g.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./"+g.AssetsDirectory))))
+
+	g.Router.NotFoundHandler = http.HandlerFunc(g.NotFoundHandler)
 
 	srv := &http.Server{
 		Handler:      g,
