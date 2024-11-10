@@ -113,14 +113,15 @@ type Template struct {
 }
 
 // Handle a http request
-func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (t *Template) Handle() {
+	url := t.URL
+	if url == "" {
+		url = "/" + t.Name
+	}
+	t.Golatt.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		seo := &SeoData{
-			URL:         t.URL,
+			URL:         url,
 			Description: t.Description,
-		}
-		if seo.URL == "" {
-			seo.URL = "/" + t.Name
 		}
 		if t.Image != "" {
 			seo.Image = GetStaticPath(t.Image)
@@ -130,20 +131,16 @@ func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 			SEO:   seo,
 			Data:  t.Data,
 		})
-	}
+	})
 }
 
 // HandleSimpleTemplate handles a http request for a simple Template (only name and title are present)
 func (g *Golatt) HandleSimpleTemplate(name string, title string) {
-	g.HandleFunc("/"+name, func(w http.ResponseWriter, r *http.Request) {
-		t := Template{
-			Golatt:      g,
-			Name:        name,
-			Title:       title,
-			Data:        nil,
-			Image:       "",
-			Description: "",
-		}
-		t.Handle()
-	})
+	t := Template{
+		Golatt: g,
+		Name:   name,
+		Title:  title,
+		Data:   nil,
+	}
+	t.Handle()
 }
