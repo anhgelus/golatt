@@ -188,10 +188,9 @@ t := golatt.Template{
     Description: "Home of my website!",
     URL: "/",
 }
-// or
-g.NewTemplate("index", "/", "Home", "index.webp", "Home of my website!", nil)
-
 t.Handle()
+// or
+g.NewTemplate("index", "/", "Home", "index.webp", "Home of my website!", nil).Handle()
 ```
 #### Custom render
 If you need more customization, you can use `Golatt.Render(w http.ResponseWriter, name string, data *TemplateData)`.
