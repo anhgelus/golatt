@@ -186,7 +186,7 @@ t := golatt.Template{
     Description: "Home of my website!",
     URL: "/",
 }
-g.HandleFunc("/", t.Handle())
+t.Handle()
 ```
 #### Custom render
 If you need more customization, you can use `Golatt.Render(w http.ResponseWriter, name string, data *TemplateData)`.
