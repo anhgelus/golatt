@@ -206,6 +206,19 @@ g.HandleFunc("/foo", g.Render(w, "foo/index", &golatt.TemplateData{
 	Data:  nil,
 }))
 ```
+#### Errors 404
+You can handle errors 404 by setting `Golatt.NotFoundHandler`, e.g.
+```go
+t := golatt.Template{
+    Golatt: g,
+    Name: "not_found",
+    Title: "Home",
+    Image: "",
+    Description: "Error 404",
+    URL: "",
+}
+g.NotFoundHandler = t.Handle()
+```
 ### Configuration
 You can change default static and assets directories by modifying `AssetsDirectory` and `StaticDirectory` of your `Golatt`
 instance.
