@@ -158,7 +158,7 @@ These templates must be put in `templates/page` and have the extension `.gohtml`
 
 You can handle a simple request with this, e.g.
 ```go
-g.HandleFunc("/hello", g.HandleSimpleTemplate("hello", "Hello"))
+g.HandleSimpleTemplate("hello", "Hello")
 ```
 :warning: The URL generated could possibly be the wrong one!
 The generated URL will be `"/"+name`.

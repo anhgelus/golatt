@@ -134,8 +134,8 @@ func (t *Template) Handle() func(w http.ResponseWriter, r *http.Request) {
 }
 
 // HandleSimpleTemplate handles a http request for a simple Template (only name and title are present)
-func (g *Golatt) HandleSimpleTemplate(name string, title string) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (g *Golatt) HandleSimpleTemplate(name string, title string) {
+	g.HandleFunc("/"+name, func(w http.ResponseWriter, r *http.Request) {
 		t := Template{
 			Golatt:      g,
 			Name:        name,
@@ -145,5 +145,5 @@ func (g *Golatt) HandleSimpleTemplate(name string, title string) func(w http.Res
 			Description: "",
 		}
 		t.Handle()
-	}
+	})
 }
