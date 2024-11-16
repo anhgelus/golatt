@@ -1,10 +1,11 @@
-FROM node:22-alpine as builder
+FROM oven/bun:1-slim as builder
+# use bun slim until bun supports musl libc
 
 WORKDIR /app
 
 COPY . .
 
-RUN nm install && npm run build
+RUN bun i && bun run build
 
 FROM golang:1.23-alpine
 
