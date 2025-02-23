@@ -69,6 +69,7 @@ func New(files fs.FS) *Golatt {
 		PageDirectory:     "page",
 		FsDirectory:       "templates",
 		TemplateExtension: "gohtml",
+		NotFoundHandler:   http.NotFound,
 	}
 }
 
