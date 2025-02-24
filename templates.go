@@ -85,7 +85,7 @@ func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) 
 }
 
 func (g *Golatt) getFile(path string) string {
-	return g.FsDirectory + "/" + g.PageDirectory + "/" + path + "." + g.TemplateExtension
+	return g.TemplatesName + "/" + g.PageDirectory + "/" + path + "." + g.TemplateExtension
 }
 
 // GetStaticPath returns the path of a static file (image, font)

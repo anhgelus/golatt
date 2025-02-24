@@ -9,19 +9,23 @@ It is lightweight and heavily customizable.
 ### Basic usage
 Install the framework with
 ```bash
-go get -u github.com/anhgelus/golatt@v0.2.0
+go get -u github.com/anhgelus/golatt@v0.3.0
 ```
 
-Create a new directory called `templates` and embed it with go:embed, e.g.
+Create a new directories called `templates`, `static` and `assets`, and embed them with go:embed, e.g.
 ```go
 //go:embed templates
 var templates embed.FS
+//go:embed static
+var static embed.FS
+//go:embed dist
+var assets embed.FS
 ```
-This directory will contain all your Go templates.
+These directories will contain all your Go templates, static files and assets.
 
 Create a new `Golatt` instance with `golatt.New(fs.FS)`, e.g.
 ```go
-g := golatt.New(templates)
+g := golatt.New(templates, static, assets)
 ```
 
 Then you can use this instance to handle http queries, e.g.

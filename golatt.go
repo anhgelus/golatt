@@ -31,22 +31,26 @@ type Golatt struct {
 	//
 	// Default: returns the title without modification
 	FormatTitle func(t string) string
-	// AssetsDirectory is the folder containing assets
+	// AssetsName is the folder containing assets
 	//
 	// Default: "dist"
-	AssetsDirectory string
-	// StaticDirectory is the folder containing static files
+	AssetsName string
+	// AssetsFS is the filesystem containing all the assets. It must start with AssetsName
+	AssetsFS fs.FS
+	// StaticName is the folder containing static files
 	//
 	// Default: "public"
-	StaticDirectory string
+	StaticName string
+	// StaticFS is the filesystem containing all the static files. It must start with StaticName
+	StaticFS fs.FS
 	// PageDirectory is the folder containing page templates
 	//
 	// Default: "page"
 	PageDirectory string
-	// DefaultDirectoryFS is the folder containing all templates
+	// TemplatesName is the folder containing all templates
 	//
 	// Default: "templates"
-	FsDirectory string
+	TemplatesName string
 	// TemplateExtension is the extension of all templates
 	//
 	// Default: "gohtml"
@@ -58,7 +62,7 @@ type Golatt struct {
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
-func New(files fs.FS) *Golatt {
+func New(files fs.FS, static fs.FS, assets fs.FS) *Golatt {
 	return &Golatt{
 		Files:  files,
 		Router: mux.NewRouter(),
@@ -67,10 +71,12 @@ func New(files fs.FS) *Golatt {
 		},
 		Templates:         make([]string, 0),
 		InitialSection:    "base",
-		AssetsDirectory:   "dist",
-		StaticDirectory:   "public",
+		AssetsName:        "dist",
+		AssetsFS:          assets,
+		StaticName:        "public",
+		StaticFS:          static,
 		PageDirectory:     "page",
-		FsDirectory:       "templates",
+		TemplatesName:     "templates",
 		TemplateExtension: "gohtml",
 		NotFoundHandler:   http.NotFound,
 		TemplateFuncMap:   template.FuncMap{},
@@ -79,8 +85,8 @@ func New(files fs.FS) *Golatt {
 
 // StartServer starts the http server listening on addr (e.g. ":8000", "127.0.0.1:80")
 func (g *Golatt) StartServer(addr string) {
-	g.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./"+g.StaticDirectory))))
-	g.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./"+g.AssetsDirectory))))
+	g.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServerFS(g.StaticFS)))
+	g.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServerFS(g.AssetsFS)))
 
 	g.Router.NotFoundHandler = http.HandlerFunc(g.NotFoundHandler)
 
