@@ -2,4 +2,4 @@ module github.com/anhgelus/golatt
 
 go 1.23.2
 
-require github.com/gorilla/mux v1.8.1 // indirect
+require github.com/gorilla/mux v1.8.1

@@ -32,26 +32,14 @@ type Golatt struct {
 	//
 	// Default: returns the title without modification
 	FormatTitle func(t string) string
-	// AssetsName is the folder containing assets
-	//
-	// Default: "dist"
-	AssetsName string
 	// AssetsFS is the filesystem containing all the assets. It must start with AssetsName
 	AssetsFS fs.FS
-	// StaticName is the folder containing static files
-	//
-	// Default: "public"
-	StaticName string
 	// StaticFS is the filesystem containing all the static files. It must start with StaticName
 	StaticFS fs.FS
 	// PageDirectory is the folder containing page templates
 	//
 	// Default: "page"
 	PageDirectory string
-	// TemplatesName is the folder containing all templates
-	//
-	// Default: "templates"
-	TemplatesName string
 	// TemplateExtension is the extension of all templates
 	//
 	// Default: "gohtml"
@@ -74,12 +62,9 @@ func New(files fs.FS, static fs.FS, assets fs.FS) *Golatt {
 		},
 		Templates:         make([]string, 0),
 		InitialSection:    "base",
-		AssetsName:        "dist",
 		AssetsFS:          assets,
-		StaticName:        "public",
 		StaticFS:          static,
 		PageDirectory:     "page",
-		TemplatesName:     "templates",
 		TemplateExtension: "gohtml",
 		NotFoundHandler:   http.NotFound,
 		TemplateFuncMap:   template.FuncMap{},

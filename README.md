@@ -23,7 +23,11 @@ These directories will contain all your Go templates, static files and assets.
 
 Create a new `Golatt` instance with `golatt.New(fs.FS)`, e.g.
 ```go
-g := golatt.New(templates, golatt.UsableEmbedFS("public", contents), golatt.UsableEmbedFS("dist", contents))
+g := golatt.New(
+	golatt.UsableEmbedFS("templates", templates),
+	golatt.UsableEmbedFS("public", contents),
+	golatt.UsableEmbedFS("dist", contents),
+)
 ```
 
 Then you can use this instance to handle http queries, e.g.
@@ -48,11 +52,19 @@ import (
 	"github.com/anhgelus/golatt"
 )
 
-//go:embed templates
-var templates embed.FS
+var (
+	//go:embed templates
+	templates embed.FS
+    //go:embed dist public
+    contents embed.FS
+)
 
 func main() {
-	g := golatt.New(templates)
+	g := golatt.New(
+		golatt.UsableEmbedFS("templates", templates),
+		golatt.UsableEmbedFS("public", contents),
+		golatt.UsableEmbedFS("dist", contents),
+	)
 	g.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Yeah!"))
 	})
@@ -134,7 +146,8 @@ Finally, we have to register these templates in Golatt.
 You must simply add the relative path of each template into the slice `Golatt.Templates`.
 You must NOT register your page body (the template defining the section `body`).
 ```go
-g.Templates = append(g.Templates, "templates/base/*.gohtml")
+// "templates/" is omitted because it was already defined by golatt.UsableEmbedFS("templates", templates)
+g.Templates = append(g.Templates, "base/*.gohtml") 
 ```
 If you changed the name of the folder, you have to change the relative path too!
 #### Static paths and assets paths 
@@ -226,14 +239,7 @@ t := golatt.Template{
 g.NotFoundHandler = t.Handle()
 ```
 ### Configuration
-You can change default static and assets directories by modifying `AssetsDirectory` and `StaticDirectory` of your `Golatt`
-instance.
-```go
-g.AssetsDirectory = "assets" // default: "dist"
-g.StaticDirectory = "static" // default: "public"
-```
-
-You can also format each page's title by setting `Golatt.FormatTitle`.
+You can format each page's title by setting `Golatt.FormatTitle`.
 It takes a string representing the page's title, and it returns the new title.
 ```go
 g.FormatTitle = func(t string) string {
@@ -243,32 +249,11 @@ g.FormatTitle = func(t string) string {
 
 It is also possible to edit the directory containing all your pages' template by modifying `Golatt.PageDirectory`.
 ```go
-// new location is directory/foo/bar (where directory is the default directory in FS, i.e. templates by default)
+// new location is templates/foo/bar
 g.PageDirectory = "foo/bar" // default: "page"
 ```
 
-You can change the default directory of the filesystem by modifying `Golatt.FsDirectory`.
-This value must be the same as the path of the embed directories.
-```go
-package main
-
-import (
-	"embed"
-
-	"github.com/anhgelus/golatt"
-)
-
-//go:embed foo/bar
-var templates embed.FS
-
-func main() {
-	g := golatt.New(templates)
-	// sets the default directory to the path of the go:embed FS
-	g.FsDirectory = "foo/bar" // default: "templates"
-}
-```
-
-You can also use another extension for the templates file. 
+You can also use another extension for the templates file.
 Modify `Golatt.TemplateExtension` to change it.
 ```go
 // all your template files must have this extension
