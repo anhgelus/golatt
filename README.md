@@ -9,7 +9,7 @@ It is lightweight and heavily customizable.
 ### Basic usage
 Install the framework with
 ```bash
-go get -u github.com/anhgelus/golatt@v0.3.0
+go get -u github.com/anhgelus/golatt@v0.4.0
 ```
 
 Create a new directories called `templates`, `static` and `assets`, and embed them with go:embed, e.g.
