@@ -107,7 +107,7 @@ func (g *Golatt) StartServer(addr string) {
 	slog.Info("Shutting down")
 }
 
-// httpEmbedFS is an implementation of fs.FS helping to manage embed.FS for http server
+// httpEmbedFS is an implementation of fs.FS, fs.ReadDirFS and fs.ReadFileFS helping to manage embed.FS for http server
 type httpEmbedFS struct {
 	prefix string
 	embed.FS
@@ -115,6 +115,14 @@ type httpEmbedFS struct {
 
 func (h *httpEmbedFS) Open(name string) (fs.File, error) {
 	return h.FS.Open(h.prefix + "/" + name)
+}
+
+func (h *httpEmbedFS) ReadFile(name string) ([]byte, error) {
+	return h.FS.ReadFile(h.prefix + "/" + name)
+}
+
+func (h *httpEmbedFS) ReadDir(name string) ([]fs.DirEntry, error) {
+	return h.FS.ReadDir(h.prefix + "/" + name)
 }
 
 // UsableEmbedFS converts embed.FS into usable fs.FS by Golatt
