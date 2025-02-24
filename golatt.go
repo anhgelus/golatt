@@ -2,6 +2,7 @@ package golatt
 
 import (
 	"context"
+	"embed"
 	"github.com/gorilla/mux"
 	"html/template"
 	"io/fs"
@@ -62,6 +63,8 @@ type Golatt struct {
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
+//
+// If you are providing an embed.FS, check UsableEmbedFS before passing this argument
 func New(files fs.FS, static fs.FS, assets fs.FS) *Golatt {
 	return &Golatt{
 		Files:  files,
@@ -117,4 +120,24 @@ func (g *Golatt) StartServer(addr string) {
 		panic(err)
 	}
 	slog.Info("Shutting down")
+}
+
+// httpEmbedFS is an implementation of fs.FS helping to manage embed.FS for http server
+type httpEmbedFS struct {
+	prefix string
+	embed.FS
+}
+
+func (h *httpEmbedFS) Open(name string) (fs.File, error) {
+	return h.FS.Open(h.prefix + "/" + name)
+}
+
+// UsableEmbedFS converts embed.FS into usable fs.FS by Golatt
+//
+// folder may not finish or start with a slash (/)
+func UsableEmbedFS(folder string, em embed.FS) fs.FS {
+	return &httpEmbedFS{
+		prefix: folder,
+		FS:     em,
+	}
 }

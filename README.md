@@ -16,16 +16,14 @@ Create a new directories called `templates`, `static` and `assets`, and embed th
 ```go
 //go:embed templates
 var templates embed.FS
-//go:embed static
-var static embed.FS
-//go:embed dist
-var assets embed.FS
+//go:embed dist public
+var contents embed.FS
 ```
 These directories will contain all your Go templates, static files and assets.
 
 Create a new `Golatt` instance with `golatt.New(fs.FS)`, e.g.
 ```go
-g := golatt.New(templates, static, assets)
+g := golatt.New(templates, golatt.UsableEmbedFS("public", contents), golatt.UsableEmbedFS("dist", contents))
 ```
 
 Then you can use this instance to handle http queries, e.g.
