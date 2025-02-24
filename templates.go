@@ -42,14 +42,18 @@ func (g *Golatt) setupTemplates() *template.Template {
 			t = t.New(p)
 		}
 	}
-	return template.Must(t.Funcs(template.FuncMap{
+	t = t.Funcs(template.FuncMap{
 		"getStaticPath": func(path string) string {
 			return GetStaticPath(path)
 		},
 		"getAssetPath": func(path string) string {
 			return GetAssetPath(path)
 		},
-	}).ParseFS(g.Files, g.Templates...))
+	})
+	if g.TemplateFuncMap == nil {
+		return template.Must(t.ParseFS(g.Files, g.Templates...))
+	}
+	return template.Must(t.Funcs(g.TemplateFuncMap).ParseFS(g.Files, g.Templates...))
 }
 
 func (g *Golatt) mergeData(d *TemplateData) {

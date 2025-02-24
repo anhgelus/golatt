@@ -3,6 +3,7 @@ package golatt
 import (
 	"context"
 	"github.com/gorilla/mux"
+	"html/template"
 	"io/fs"
 	"log/slog"
 	"net/http"
@@ -52,6 +53,8 @@ type Golatt struct {
 	TemplateExtension string
 	// NotFoundHandler handles 404 errors
 	NotFoundHandler func(http.ResponseWriter, *http.Request)
+	// TemplateFuncMap is a map of custom functions usable in templates
+	TemplateFuncMap template.FuncMap
 }
 
 // New creates a new Golatt instance with provided files (must be valid go templates files)
@@ -70,6 +73,7 @@ func New(files fs.FS) *Golatt {
 		FsDirectory:       "templates",
 		TemplateExtension: "gohtml",
 		NotFoundHandler:   http.NotFound,
+		TemplateFuncMap:   template.FuncMap{},
 	}
 }
 
