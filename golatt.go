@@ -199,7 +199,7 @@ func (g *Golatt) StartServer(addr string) {
 	}()
 	if g.SupportsGemini {
 		go func() {
-			if err := g.GeminiMux.StartServer(addr); err != nil {
+			if err := g.GeminiMux.StartServer(":1965"); err != nil {
 				slog.Error(err.Error())
 			}
 		}()

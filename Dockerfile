@@ -16,5 +16,6 @@ COPY --from=builder . .
 RUN go mod tidy && go build -o ./app .
 
 EXPOSE 80
+EXPOSE 1965
 
 CMD ./app
