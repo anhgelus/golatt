@@ -30,12 +30,12 @@ type TemplateData struct {
 	Data interface{}
 }
 
-func (g *Golatt) setupTemplates() *template.Template {
+func (h *HTTP) setupTemplates() *template.Template {
 	var t *template.Template
-	if g.Templates == nil || len(g.Templates) == 0 {
+	if h.Templates == nil || len(h.Templates) == 0 {
 		panic("templates are not initialized")
 	}
-	for _, p := range g.Templates {
+	for _, p := range h.Templates {
 		if t == nil {
 			t = template.New(p)
 		} else {
@@ -50,42 +50,42 @@ func (g *Golatt) setupTemplates() *template.Template {
 			return GetAssetPath(path)
 		},
 	})
-	if g.TemplateFuncMap == nil {
-		return template.Must(t.ParseFS(g.Files, g.Templates...))
+	if h.TemplateFuncMap == nil {
+		return template.Must(t.ParseFS(h.Files, h.Templates...))
 	}
-	return template.Must(t.Funcs(g.TemplateFuncMap).ParseFS(g.Files, g.Templates...))
+	return template.Must(t.Funcs(h.TemplateFuncMap).ParseFS(h.Files, h.Templates...))
 }
 
-func (g *Golatt) mergeData(d *TemplateData) {
-	d.Title = g.FormatTitle(d.Title)
-	if g.DefaultSeoData == nil {
+func (h *HTTP) mergeData(d *TemplateData) {
+	d.Title = h.FormatTitle(d.Title)
+	if h.DefaultSeoData == nil {
 		return
 	}
 	s := d.SEO
-	s.Domain = g.DefaultSeoData.Domain
+	s.Domain = h.DefaultSeoData.Domain
 	s.Title = d.Title
 	if s.Image == "" {
-		s.Image = g.DefaultSeoData.Image
+		s.Image = h.DefaultSeoData.Image
 	}
 	if s.Description == "" {
-		s.Description = g.DefaultSeoData.Description
+		s.Description = h.DefaultSeoData.Description
 	}
 }
 
 // Render the template available at templates/page/name.gohtml with the data provided
-func (g *Golatt) Render(w http.ResponseWriter, name string, data *TemplateData) {
-	g.mergeData(data)
-	t := g.setupTemplates()
-	template.Must(t.ParseFS(g.Files, g.getFile(name)))
-	err := t.ExecuteTemplate(w, g.InitialSection, data)
+func (h *HTTP) Render(w http.ResponseWriter, name string, data *TemplateData) {
+	h.mergeData(data)
+	t := h.setupTemplates()
+	template.Must(t.ParseFS(h.Files, h.getFile(name)))
+	err := t.ExecuteTemplate(w, h.InitialSection, data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		slog.Error("error while rendering template", "err", err.Error())
 	}
 }
 
-func (g *Golatt) getFile(path string) string {
-	return g.PageDirectory + "/" + path + "." + g.TemplateExtension
+func (h *HTTP) getFile(path string) string {
+	return h.PageDirectory + "/" + path + "." + h.TemplateExtension
 }
 
 // GetStaticPath returns the path of a static file (image, font)
@@ -100,8 +100,8 @@ func GetAssetPath(path string) string {
 
 // Template represents a generic template
 type Template struct {
-	// Golatt used
-	Golatt *Golatt
+	// HTTP used
+	Http *HTTP
 	// Name of the template (check Golatt.Render)
 	Name string
 	// Title of the template
@@ -118,9 +118,9 @@ type Template struct {
 
 // NewTemplate creates a new template.
 // You can directly handle it with Template.Handle
-func (g *Golatt) NewTemplate(name string, url string, title string, image string, description string, data interface{}) *Template {
+func (h *HTTP) NewTemplate(name string, url string, title string, image string, description string, data interface{}) *Template {
 	return &Template{
-		Golatt:      g,
+		Http:        h,
 		Name:        name,
 		Title:       title,
 		Data:        data,
@@ -130,13 +130,13 @@ func (g *Golatt) NewTemplate(name string, url string, title string, image string
 	}
 }
 
-// Handle a http request
+// Handle an http request
 func (t *Template) Handle() {
 	url := t.URL
 	if url == "" {
 		url = "/" + t.Name
 	}
-	t.Golatt.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
+	t.Http.HandleFunc(url, func(w http.ResponseWriter, r *http.Request) {
 		seo := &SeoData{
 			URL:         url,
 			Description: t.Description,
@@ -144,7 +144,7 @@ func (t *Template) Handle() {
 		if t.Image != "" {
 			seo.Image = GetStaticPath(t.Image)
 		}
-		t.Golatt.Render(w, t.Name, &TemplateData{
+		t.Http.Render(w, t.Name, &TemplateData{
 			Title: t.Title,
 			SEO:   seo,
 			Data:  t.Data,
@@ -152,13 +152,13 @@ func (t *Template) Handle() {
 	})
 }
 
-// HandleSimpleTemplate handles a http request for a simple Template (only name and title are present)
-func (g *Golatt) HandleSimpleTemplate(name string, title string) {
+// HandleSimpleTemplate handles an http request for a simple Template (only name and title are present)
+func (h *HTTP) HandleSimpleTemplate(name string, title string) {
 	t := Template{
-		Golatt: g,
-		Name:   name,
-		Title:  title,
-		Data:   nil,
+		Http:  h,
+		Name:  name,
+		Title: title,
+		Data:  nil,
 	}
 	t.Handle()
 }
