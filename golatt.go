@@ -113,7 +113,9 @@ type Gemini struct {
 	CertsDuration time.Duration
 	// StaticFS is the filesystem containing all the static files
 	StaticFS fs.FS
-	srv      *gemini.Server
+	// Domains contain all domains served by Gemini
+	Domains []string
+	srv     *gemini.Server
 }
 
 func (g *Gemini) StartServer(addr string) error {
@@ -129,6 +131,9 @@ func (g *Gemini) StartServer(addr string) error {
 		}
 		slog.Info("Creating certificate", "scope", scope, "duration", g.CertsDuration)
 		return certificate.Create(options)
+	}
+	for _, d := range g.Domains {
+		g.Certs.Register(d)
 	}
 
 	g.srv = &gemini.Server{
